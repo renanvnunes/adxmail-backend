@@ -1,0 +1,128 @@
+<div style="text-align: center; width: 700px; margin: 0 auto; font-family: 'Arial', sans-serif;">
+	<table width="700" align="center" style="width: 700px; background-color: #fff;" cellspacing="0" cellpadding="10"
+		border="0">
+		<tr>
+			<td width="700">
+
+				<table>
+					<tr>
+						<td>
+							{{#if email.link_topo}}
+								<a href="{{ email.link_topo }}" target="_blank">
+							{{/if}}
+
+									<img width="700" src="{{{ public_cdn }}}/templates/{{{ email.topo }}}">
+									
+							{{#if email.link_topo}}
+								</a>
+							{{/if}}
+						</td>
+					</tr>
+				</table>
+
+				{{!-- <table>
+					<tr>
+						<td>
+							<a href="" target="_blank"> <img width="700" src=""></a>
+						</td>
+					</tr>
+				</table> --}}
+
+				<table style="color: #666;">
+					<tr>
+						<td width="700">
+
+							{{#each email.produtos}}
+							<table class="msoFix" style="height: 600px!important;" width="{{ this.col }}" cellspacing="0"
+								cellpadding="0" align="left">
+								<tr>
+									
+									<td width="{{ this.col }}" align="left"style="text-align: center;">
+									{{!-- <td width="{{ this.col }}" align="left"style="padding-top: 20px; padding-bottom: 20px; text-align: center;"> --}}
+
+										<div style="padding: 15px;">
+
+											<a style="color: #666; text-decoration: none;" target="_blank" href="{{ this.link }}">
+
+												<img width="{{ this.col2 }}" src="{{ this.foto }}" alt="Camisa jeans com detalhe em tricot">
+												
+												<div style="text-align: center; margin-top: 20px; height: 70px; font-family: 'Arial'; padding-left: 10px; padding-right: 10px;">{{ this.nome }}</div>
+
+												<div
+													style="text-align: center; margin-top: 10px; font-family: 'Arial';">
+
+													<b style="color: red;"><s>De R$ 499,00</s></b>
+												</div>
+
+												<div style="text-align: center; font-family: 'Arial';">Por R$ <b>248,90</b></div>
+
+												<div style="margin-top: 15px;">
+
+													<div style="text-align: center;">
+														<a href="https://www.scalon.com.br/camisa-jeans-manga-longa-tricot-costas" target="_blank">
+															<img width="200" src="{{{ ../public_cdn }}}/templates/{{ ../email.botao }}" />
+														</a>
+													</div>
+												</div>
+											</a>
+										</div>
+
+									</td>
+
+								</tr>
+							</table>
+							{{/each}}
+							
+						</td>
+					</tr>
+				</table>
+				
+
+				{{!-- <table>
+					<tr>
+						<td>
+							<a href="" target="_blank"> <img style="width: 700px;" src="">
+							</a>
+						</td>
+					</tr>
+				</table> --}}
+
+				<table>
+					<tr>
+						<td>
+							<a href="{{ email.link_rodape }}" target="_blank">
+								<img style="width: 700px;" src="{{{ public_cdn }}}/templates/{{{ email.rodape }}}">
+							</a>
+						</td>
+					</tr>
+				</table>
+
+				<table>
+					<tr>
+						<td align="center"
+							style="padding-top: 27px; font-size: 14px; color: #666666; text-align: center; padding-bottom: 20px;">
+							<div style="width: 700px; margin: 0 auto;">
+
+								<a target="_blank" style="text-decoration: none; width:70px;"
+									href="https://www.facebook.com/scalonjeansoficial">
+									<img width="20" style="width: 20px; margin-right: 15px;"
+										src="https://adxmail.com.br/app/assets/img/facebook.png" />
+								</a>
+
+								<a target="_blank" style="text-decoration: none; width: 70px;"
+									href="https://www.instagram.com/accounts/login/?next=/scalonjeans/">
+									<img width="20" style="width: 20px; margin-right: 15px;"
+										src="https://adxmail.com.br/app/assets/img/instagram.png" />
+								</a>
+
+							</div>
+
+						</td>
+					</tr>
+				</table>
+
+
+			</td>
+		</tr>
+	</table>
+</div>
