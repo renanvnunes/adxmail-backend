@@ -22,7 +22,7 @@ cron.schedule('*/30 * * * * *', async () => {
 		
 		console.log()
 		console.log(' ------------------------------------------------- ')
-		console.log('   Fora do horário de atualização de produtos...')
+		console.log('   Fora do horário de atualização de produtos (Horário de atividade: Acima do minuto 30)...')
 		console.log(' ------------------------------------------------- ')
 		console.log()
 		

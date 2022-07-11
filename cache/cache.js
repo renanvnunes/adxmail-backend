@@ -49,6 +49,10 @@ class ClassCache{
 		// }
 	}
 
+	clear(){
+		return cacheMemory.clear()
+	}
+
 	cacheByUser(page, req, res, next){
 		// const user = JSON.parse(req.user_data)
 		

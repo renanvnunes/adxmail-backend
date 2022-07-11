@@ -8,10 +8,17 @@ const clientesSchema = new Schema({
 		type: String,
 		default: 'ativo'
 	},
+	old_id: String,
 	tipo: String,
 	nome: String,
 	site: String,
+	
 	xml: String,
+	facebook: String,
+	instagram: String,
+	youtube: String,
+	tiktok: String,
+
 	empresa_id: mongoose.Schema.Types.ObjectId,
 	updated_at: {
 		type: Date,

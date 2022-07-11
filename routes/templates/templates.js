@@ -137,9 +137,10 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		
 	})
 	
-	await insert.save((error, success) => {
+	await insert.save(async (error, success) => {
 		if(error == null){
 			res.status(201)
+			await cache.clear()
 			res.send(outputMsg(true, insert))
 		}else{
 			res.send(outputMsg(false, error))
@@ -250,7 +251,8 @@ router.put('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
 	}
 
-	await templatesSchema.updateOne({'_id' : mongoose.Types.ObjectId(id)}, {'$set' : new_data}, {'upsert' : true}).then(resp => {
+	await templatesSchema.updateOne({'_id' : mongoose.Types.ObjectId(id)}, {'$set' : new_data}, {'upsert' : true}).then(async resp => {
+		await cache.clear()
 		res.send({success: 1, message: 'Atualizado com sucesso.'})
 	})
 	

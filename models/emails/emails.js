@@ -4,6 +4,10 @@ const Schema = mongoose.Schema
 const default_date = new Date()
 
 const emailsSchema = new Schema({
+	migrado: {
+		type: Boolean,
+		default: false
+	},
 	concluido: {
 		type: Boolean,
 		default: false
@@ -11,11 +15,23 @@ const emailsSchema = new Schema({
 	cliente_id: mongoose.Schema.Types.ObjectId,
 	empresa_id: mongoose.Schema.Types.ObjectId,
 	nome: String,
+	old_id: Number,
 
 	topo: String,
 	rodape: String,
 	botao: String,
 	obs: String,
+
+	topo_adicional: String,
+	topo_adicional_link: String,
+
+	rodape_adicional: String,
+	rodape_adicional_link: String,
+
+	instagram: String,
+	youtube: String,
+	facebook: String,
+	tiktok: String,
 
 	produtos: Array,
 	

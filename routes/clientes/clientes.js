@@ -75,6 +75,10 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		site: fields.site.trim(),
 		tipo: fields.tipo.trim(),
 		status: fields.status,
+		facebook: fields.facebook,
+		instagram: fields.instagram,
+		youtube: fields.youtube,
+		tiktok: fields.tiktok,
 		xml: fields.xml.trim(),
 		empresa_id: mongoose.Types.ObjectId(req.query.empresa_id),
 		created_by: user.user_nome,
@@ -118,6 +122,10 @@ router.put('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		tipo: fields.tipo.trim(),
 		status: fields.status,
 		xml: fields.xml,
+		facebook: fields.facebook,
+		instagram: fields.instagram,
+		youtube: fields.youtube,
+		tiktok: fields.tiktok,
 		updated_by: user.user_nome,
 		updated_at: moment(new Date()).format("YYYY-MM-DD HH:mm:ss")
 	}

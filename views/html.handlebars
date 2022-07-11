@@ -1,3 +1,4 @@
+
 <div style="text-align: center; width: 700px; margin: 0 auto; font-family: 'Arial', sans-serif;">
 	<table width="700" align="center" style="width: 700px; background-color: #fff;" cellspacing="0" cellpadding="10"
 		border="0">
@@ -8,7 +9,7 @@
 					<tr>
 						<td>
 							{{#if email.link_topo}}
-								<a href="{{ email.link_topo }}" target="_blank">
+								<a href="/redirect/{{ email._id }}?url={{ email.link_topo }}" target="_blank">
 							{{/if}}
 
 									<img width="700" src="{{{ public_cdn }}}/templates/{{{ email.topo }}}">
@@ -42,24 +43,30 @@
 
 										<div style="padding: 15px;">
 
-											<a style="color: #666; text-decoration: none;" target="_blank" href="{{ this.link }}">
+											<a style="color: #666; text-decoration: none;" target="_blank" href="/redirect/{{ ../email._id }}?url={{ this.link }}">
 
 												<img width="{{ this.col2 }}" src="{{ this.foto }}" alt="Camisa jeans com detalhe em tricot">
 												
 												<div style="text-align: center; margin-top: 20px; height: 70px; font-family: 'Arial'; padding-left: 10px; padding-right: 10px;">{{ this.nome }}</div>
 
+												{{#if this.preco_desconto}}
 												<div
 													style="text-align: center; margin-top: 10px; font-family: 'Arial';">
 
-													<b style="color: red;"><s>De R$ 499,00</s></b>
+													<b style="color: red;"><s>De R$ {{ this.preco }}</s></b>
 												</div>
+												{{/if}}
 
-												<div style="text-align: center; font-family: 'Arial';">Por R$ <b>248,90</b></div>
+												{{#if this.preco_desconto}}
+												<div style="text-align: center; font-family: 'Arial';">Por R$ <b>{{ this.preco_desconto }}</b></div>
+												{{else}}
+												<div style="text-align: center; font-family: 'Arial';">Por R$ <b>{{ this.preco }}</b></div>
+												{{/if}}
 
 												<div style="margin-top: 15px;">
 
 													<div style="text-align: center;">
-														<a href="https://www.scalon.com.br/camisa-jeans-manga-longa-tricot-costas" target="_blank">
+														<a href="/redirect/{{ ../email._id }}?url={{ this.link }}" target="_blank">
 															<img width="200" src="{{{ ../public_cdn }}}/templates/{{ ../email.botao }}" />
 														</a>
 													</div>
@@ -90,9 +97,15 @@
 				<table>
 					<tr>
 						<td>
-							<a href="{{ email.link_rodape }}" target="_blank">
-								<img style="width: 700px;" src="{{{ public_cdn }}}/templates/{{{ email.rodape }}}">
-							</a>
+							{{#if email.link_rodape}}
+								<a href="/redirect/{{ email._id }}?url={{ email.link_rodape }}" target="_blank">
+							{{/if}}
+
+									<img width="700" src="{{{ public_cdn }}}/templates/{{{ email.rodape }}}">
+									
+							{{#if email.link_rodape}}
+								</a>
+							{{/if}}
 						</td>
 					</tr>
 				</table>
@@ -103,17 +116,29 @@
 							style="padding-top: 27px; font-size: 14px; color: #666666; text-align: center; padding-bottom: 20px;">
 							<div style="width: 700px; margin: 0 auto;">
 
-								<a target="_blank" style="text-decoration: none; width:70px;"
-									href="https://www.facebook.com/scalonjeansoficial">
-									<img width="20" style="width: 20px; margin-right: 15px;"
-										src="https://adxmail.com.br/app/assets/img/facebook.png" />
+								{{#if email.facebook}}
+								<a target="_blank" style="text-decoration: none; width:70px;" href="{{{email.facebook}}}">
+									<img width="20" style="width: 20px; margin-right: 15px;" src="https://spaces.adxstore.com.br/adxmail_v2/assets/facebook.png" />
 								</a>
+								{{/if}}
 
-								<a target="_blank" style="text-decoration: none; width: 70px;"
-									href="https://www.instagram.com/accounts/login/?next=/scalonjeans/">
-									<img width="20" style="width: 20px; margin-right: 15px;"
-										src="https://adxmail.com.br/app/assets/img/instagram.png" />
+								{{#if email.instagram}}
+								<a target="_blank" style="text-decoration: none; width:70px;" href="{{{email.instagram}}}">
+									<img width="20" style="width: 20px; margin-right: 15px;" src="https://spaces.adxstore.com.br/adxmail_v2/assets/instagram.png" />
 								</a>
+								{{/if}}
+
+								{{#if email.youtube}}
+								<a target="_blank" style="text-decoration: none; width:70px;" href="{{{email.youtube}}}">
+									<img width="20" style="width: 20px; margin-right: 15px;" src="https://spaces.adxstore.com.br/adxmail_v2/assets/youtube.png" />
+								</a>
+								{{/if}}
+
+								{{#if email.tiktok}}
+								<a target="_blank" style="text-decoration: none; width:70px;" href="{{{email.tiktok}}}">
+									<img width="20" style="width: 20px; margin-right: 15px;" src="https://spaces.adxstore.com.br/adxmail_v2/assets/tiktok.png" />
+								</a>
+								{{/if}}
 
 							</div>
 

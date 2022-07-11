@@ -50,10 +50,7 @@ import templates from './routes/templates/templates.js'
 import emails from './routes/emails/emails.js'
 import emails_html from './routes/emails/html.js'
 
-// Clear cache
-import clear_cdn      from './cache/clear/clear_cdn.js'
-import clear_category from './cache/clear/category.js'
-import clear_product  from './cache/clear/product.js'
+import redirect  from './routes/redirect.js'
 
 import './middleware/functions.js'
 
@@ -110,10 +107,7 @@ app.use('/templates', templates)
 app.use('/emails', emails)
 app.use('/html', emails_html)
 
-// Clear cache
-app.use('/clear_cdn', clear_cdn)
-app.use('/clear_category', clear_category)
-app.use('/clear_product', clear_product)
+app.use('/redirect', redirect)
 
 app.use(express_status())
 

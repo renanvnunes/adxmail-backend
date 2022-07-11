@@ -22,7 +22,7 @@ cron.schedule('*/120 * * * * *', async () => {
 		
 		console.log()
 		console.log(' ------------------------------------------------- ')
-		console.log('   Fora do horário de atualização de XML...')
+		console.log('   Fora do horário de atualização de XML...  (Horário de atividade: Abaixo do minuto 20)')
 		console.log(' ------------------------------------------------- ')
 		console.log()
 		
