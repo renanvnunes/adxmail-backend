@@ -31,7 +31,8 @@ cron.schedule('*/120 * * * * *', async () => {
 
 	try{
 		
-		await axios.get(`${process.env.HOST}:${process.env.PORT}/xml/add_to_queue`).then(resp => {
+		let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.env.PORT}` : process.env.HOST
+		await axios.get(`${url}/xml/add_to_queue`).then(resp => {
 			console.log(resp.data)
 		}).catch(error => {
 			Sentry.captureException('Erro ao rodar a cron - ' + error)
