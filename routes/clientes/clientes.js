@@ -13,11 +13,11 @@ import verifyPermissions from '../../middleware/valid_permissions.js'
 
 import cache from '../../cache/cache.js'
 
-router.get('/', cache.set('memory', 3600, 'clientes'), verifyJWT, verifyEmpresa, (req, res, next) => {
+router.get('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 	verifyPermissions(req, res, next, 'clientes')
 
-}, async (req, res) => {
+}, cache.set('memory', 3600, 'clientes'), async (req, res) => {
 	
 	const empresa_id = req.query.empresa_id
 
