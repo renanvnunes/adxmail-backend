@@ -20,17 +20,17 @@ router.get('/:id', async (req, res) => {
 		return
 	}
 
-	if(mongoose.isValidObjectId(id) == false){
-		res.send(outputMsg(false, 'O código informado é inválido.'))
-		return
-	}
+	// if(mongoose.isValidObjectId(id) == false){
+	// 	res.send(outputMsg(false, 'O código informado é inválido.'))
+	// 	return
+	// }
 
-	const email = await emailsSchema.findOne({ _id: id }, {_id: 1}).exec()
+	// const email = await emailsSchema.findOne({ _id: id }, {_id: 1}).exec()
 
-	if(!email){
-		res.send("Erro ao obter a url de destino...")
-		return
-	}
+	// if(!email){
+	// 	res.send("Erro ao obter a url de destino...")
+	// 	return
+	// }
 
 	res.redirect(url)
 })

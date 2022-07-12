@@ -67,6 +67,7 @@ router.get('/public/:id', async (req, res, next) => {
 
 	let render = {
 		email: email_render,
+		redirect_base: process.env.HTML_REDIRECT_BASE,
 		public_cdn: public_cdn
 	}
 
@@ -109,6 +110,7 @@ router.get('/', async (req, res, next) => {
 	
 	let render = {
 		email: email,
+		redirect_base: process.env.HTML_REDIRECT_BASE,
 		public_cdn: `${process.env.DO_SP_PUBLIC_CDN}/${process.env.DO_SP_FOLDER}/company/${email.empresa_id}`
 	}
 
