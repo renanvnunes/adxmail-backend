@@ -325,7 +325,7 @@ router.get('/process_queue', async (req, res, next) => {
 
 
 					}else{
-						res.send({success: 0, message: `Não há itens na fila de clientes da empresa: ${empresa._id}`})
+						res.send({success: 0, message: `Não há itens na fila de clientes da empresa: ${empresa._id} - ${moment().format("YYYY-MM-DD HH:mm:ss")}`})
 					}
 				}
 			})
