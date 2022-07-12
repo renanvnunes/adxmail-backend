@@ -14,7 +14,11 @@ export default {
 		
 	},
 	set: global.moneyBr = (str) => {
-		let value = parseFloat(str)
+
+		let replace1 = str.replace('BRL', '')
+		let replace2 = replace1.replace('R$', '')
+
+		let value = parseFloat(replace2.trim())
 		return value.toLocaleString('pt-br', {minimumFractionDigits: 2})
 	}
 }
