@@ -10,6 +10,8 @@ import { engine }   from 'express-handlebars';
 
 import 'dotenv/config'
 
+process.env.TZ = 'America/Sao_Paulo'
+
 const app = express()
 
 // Inclui o módulo do mongoose

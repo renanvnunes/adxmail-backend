@@ -1,6 +1,6 @@
 import express from 'express'
 import axios from 'axios'
-import moment from 'moment-timezone'
+import moment from 'moment'
 import mongoose from 'mongoose'
 
 import xml2js from 'xml2js'
@@ -325,7 +325,7 @@ router.get('/process_queue', async (req, res, next) => {
 
 
 					}else{
-						res.send({success: 0, message: `Não há itens na fila de clientes da empresa: ${empresa._id} - ${moment().tz("America/Sao_Paulo").format("YYYY-MM-DD HH:mm:ss")}`})
+						res.send({success: 0, message: `Não há itens na fila de clientes da empresa: ${empresa._id} - ${moment().format("YYYY-MM-DD HH:mm:ss")}`})
 					}
 				}
 			})
