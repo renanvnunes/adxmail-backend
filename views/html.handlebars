@@ -21,13 +21,20 @@
 					</tr>
 				</table>
 
-				{{!-- <table>
+				<table>
 					<tr>
 						<td>
-							<a href="" target="_blank"> <img width="700" src=""></a>
+							
+							{{#if email.link_topo_adicional}}
+							<a href="{{{ email.link_topo_adicional }}}" target="_blank">
+							{{/if}}
+								<img width="700" src="{{{ public_cdn }}}/emails/{{{ email.imagem_topo_adicional }}}" />
+							{{#if email.link_topo_adicional}}
+							</a>
+							{{/if}}
 						</td>
 					</tr>
-				</table> --}}
+				</table>
 
 				<table style="color: #666;">
 					<tr>
@@ -85,14 +92,19 @@
 				</table>
 				
 
-				{{!-- <table>
+				<table>
 					<tr>
 						<td>
-							<a href="" target="_blank"> <img style="width: 700px;" src="">
+							{{#if email.link_rodape_adicional}}
+							<a href="{{{ email.link_rodape_adicional }}}" target="_blank">
+							{{/if}}
+								<img width="700" src="{{{ public_cdn }}}/emails/{{{ email.imagem_rodape_adicional }}}" />
+							{{#if email.link_rodape_adicional}}
 							</a>
+							{{/if}}
 						</td>
 					</tr>
-				</table> --}}
+				</table>
 
 				<table>
 					<tr>

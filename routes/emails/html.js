@@ -20,7 +20,7 @@ router.get('/public/:id', async (req, res, next) => {
 		return
 	}
 
-	const email = await emailsSchema.findOne({ _id: mongoose.Types.ObjectId(id) }, {empresa_id: 1, nome: 1, topo: 1, rodape: 1, botao: 1, link_topo: 1, link_rodape: 1, produtos: 1, migrado: 1, facebook: 1, instagram: 1, youtube: 1, tiktok: 1})
+	const email = await emailsSchema.findOne({ _id: mongoose.Types.ObjectId(id) }, {empresa_id: 1, nome: 1, topo: 1, rodape: 1, botao: 1, link_topo: 1, link_rodape: 1, produtos: 1, migrado: 1, facebook: 1, instagram: 1, youtube: 1, tiktok: 1, topo_adicional: 1, rodape_adicional: 1, link_topo_adicional: 1, link_rodape_adicional: 1})
 
 	if(email == null){
 		res.send(outputMsg(false, 'E-mail não encontrado.'))
@@ -62,8 +62,16 @@ router.get('/public/:id', async (req, res, next) => {
 		instagram: email.instagram,
 		youtube: email.youtube,
 		tiktok: email.tiktok,
+
+		imagem_topo_adicional   : email.topo_adicional,
+		imagem_rodape_adicional : email.rodape_adicional,
+		link_topo_adicional     : email.link_topo_adicional,
+		link_rodape_adicional   : email.link_rodape_adicional,
+
 		produtos: email.produtos,
 	}
+
+	console.log(email_render)
 
 	let render = {
 		email: email_render,
@@ -149,20 +157,24 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 	}
 
 	const body_email = {
-		empresa_id   : empresa_id,
-		user_id      : user.user_id,
-		cliente_id   : fields.cliente._id,
-		nome         : fields.nome,
-		topo         : fields.template.imagem_topo ? fields.template.imagem_topo : null,
-		rodape       : fields.template.imagem_rodape ? fields.template.imagem_rodape: null,
-		botao        : fields.template.imagem_botao ? fields.template.imagem_botao : null,
-		link_topo    : fields.template.link_topo,
-		link_rodape  : fields.template.link_rodape,
-		facebook     : fields.cliente.facebook,
-		instagram    : fields.cliente.instagram,
-		youtube      : fields.cliente.youtube,
-		tiktok       : fields.cliente.tiktok,
-		produtos     : produtos
+		empresa_id              : empresa_id,
+		user_id                 : user.user_id,
+		cliente_id              : fields.cliente._id,
+		nome                    : fields.nome,
+		topo                    : fields.template.imagem_topo ? fields.template.imagem_topo : null,
+		rodape                  : fields.template.imagem_rodape ? fields.template.imagem_rodape: null,
+		botao                   : fields.template.imagem_botao ? fields.template.imagem_botao : null,
+		link_topo               : fields.template.link_topo,
+		link_rodape             : fields.template.link_rodape,
+		facebook                : fields.cliente.facebook,
+		instagram               : fields.cliente.instagram,
+		youtube                 : fields.cliente.youtube,
+		tiktok                  : fields.cliente.tiktok,
+		imagem_topo_adicional   : req.body.imagem_topo_adicional,
+		imagem_rodape_adicional : req.body.imagem_rodape_adicional,
+		link_topo_adicional     : req.body.link_topo_adicional,
+		link_rodape_adicional   : req.body.link_rodape_adicional,
+		produtos                : produtos
 	}
 
 	await redis_client.set(key, body_email, 3000)

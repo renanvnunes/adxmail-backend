@@ -169,6 +169,83 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 	let image_dir = `storage/tmp_img/`
 
+	let imagem_topo_adicional   = req.body.imagem_topo_adicional
+	let imagem_rodape_adicional = req.body.imagem_rodape_adicional
+	let link_topo_adicional     = req.body.link_topo_adicional
+	let link_rodape_adicional   = req.body.link_rodape_adicional
+
+	let image_topo_name = null
+	if(imagem_topo_adicional != undefined && imagem_topo_adicional != null){
+
+		image_topo_name = `email_${Math.random()}.jpg`
+		const key_foto_topo = `${process.env.DO_SP_FOLDER}/company/${empresa_id}/emails/${image_topo_name}`
+		
+		const data = imagem_topo_adicional.replace(`data:image/jpeg;base64,`, '')
+		const buffer = Buffer.from(data, "base64")
+		
+		Jimp.read(buffer, async (err, success) => {
+
+			if (success) {
+				await Jimp.read(success.resize(700, Jimp.AUTO).quality(70).write(image_dir + image_topo_name)).then(async () => {
+
+					fs.readFile(image_dir + image_topo_name, async (error, file) => {
+
+						const bucketParams = {
+							Bucket: process.env.DO_SP_NAME,
+							ContentType: `image/jpg`,
+							Key: key_foto_topo,
+							ACL: 'public-read',
+							Body: file,
+						}
+
+						await s3Client.send(new PutObjectCommand(bucketParams))
+
+						fs.unlinkSync(image_dir + image_topo_name)
+
+					})
+
+				})
+			}
+
+		}) 
+	}
+
+	let image_rodape_name = null
+	if(imagem_rodape_adicional != undefined && imagem_rodape_adicional != null){
+
+		image_rodape_name = `email_${Math.random()}.jpg`
+		const key_foto_rodape = `${process.env.DO_SP_FOLDER}/company/${empresa_id}/emails/${image_rodape_name}`
+		
+		const data = imagem_rodape_adicional.replace(`data:image/jpeg;base64,`, '')
+		const buffer = Buffer.from(data, "base64")
+		
+		Jimp.read(buffer, async (err, success) => {
+
+			if (success) {
+				await Jimp.read(success.resize(700, Jimp.AUTO).quality(70).write(image_dir + image_rodape_name)).then(async () => {
+
+					fs.readFile(image_dir + image_rodape_name, async (error, file) => {
+
+						const bucketParams = {
+							Bucket: process.env.DO_SP_NAME,
+							ContentType: `image/jpg`,
+							Key: key_foto_rodape,
+							ACL: 'public-read',
+							Body: file,
+						}
+
+						await s3Client.send(new PutObjectCommand(bucketParams))
+
+						fs.unlinkSync(image_dir + image_rodape_name)
+
+					})
+
+				})
+			}
+
+		}) 
+	}
+	
 	let produtos = []
 	for (let item of email.produtos) {
 
@@ -237,6 +314,14 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		instagram    : fields.cliente.instagram,
 		youtube      : fields.cliente.youtube,
 		tiktok       : fields.cliente.tiktok,
+
+		imagem_rodape_adicional : image_rodape_name,
+
+		topo_adicional: image_topo_name,
+		topo_adicional_link: link_topo_adicional,
+
+		rodape_adicional: image_rodape_name,
+		rodape_adicional_link: link_rodape_adicional,
 
 		created_by: user.user_nome,
 		updated_by: user.user_nome
