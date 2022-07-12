@@ -24,6 +24,7 @@ app.use(cors())
 
 // Importando rotas gerais
 import auth         from './routes/users/auth.js'
+import forgot       from './routes/users/forgot.js'
 import dashboard    from './routes/dashboard/dashboard.js'
 import modulos      from './routes/modulos/modulos.js'
 
@@ -89,6 +90,7 @@ app.get('/', function (req, res) {
 
 // Routes backend
 app.use('/auth', auth)
+app.use('/forgot', forgot)
 app.use('/logout', logout)
 app.use('/users', users)
 app.use('/users_perfis', users_perfis)

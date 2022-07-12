@@ -13,6 +13,7 @@ const usersSchema = new Schema({
 	data_expire: Date,
 	token: String,
 	empresas: Array,
+	recup_code: String,
 	created_by: String,
 	updated_by: String,
 	access_logs : Array,
