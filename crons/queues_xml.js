@@ -7,8 +7,8 @@ import redis_client from '../connections/redis.js'
 
 let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.env.PORT}` : process.env.PRODUCTION_URL
 
-// 120
-cron.schedule('*/120 * * * * *', async () => {
+
+cron.schedule('*/200 * * * * *', async () => {
 
 	if(parseInt(moment().format("mm")) < 20 && parseInt(moment().format("mm")) > 0){
 		
