@@ -10,11 +10,11 @@ Sentry.init({
 	tracesSampleRate: 1.0,
 })
 
-console.log()
-console.log(' --------------------------------- ')
-console.info('  Processo de queues iniciado...')
-console.log(' --------------------------------- ')
-console.log()
+// console.log()
+// console.log(' --------------------------------- ')
+// console.info('  Processo de queues iniciado...')
+// console.log(' --------------------------------- ')
+// console.log()
 
 let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.env.PORT}` : process.env.PRODUCTION_URL
 
