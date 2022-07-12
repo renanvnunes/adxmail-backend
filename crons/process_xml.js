@@ -20,7 +20,7 @@ let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.en
 // 30
 cron.schedule('*/10 * * * * *', async () => {
 	
-	if(parseInt(moment().format("mm")) < 29 && parseInt(moment().format("mm")) > 0){
+	if(parseInt(moment().format("mm")) > 25 && parseInt(moment().format("mm")) < 59){
 		
 		// console.log()
 		// console.log(' ------------------------------------------------- ')
@@ -28,19 +28,17 @@ cron.schedule('*/10 * * * * *', async () => {
 		// console.log(' ------------------------------------------------- ')
 		// console.log()
 		
-		return
-	}
+		try{
 
-	try{
-
-		await axios.get(`${url}/xml/process_queue`).then(resp => {
-			console.log(resp.data)
-		}).catch(error => {
-			Sentry.captureException('Erro ao rodar a cron - ' + error)
-		})
-
-	}catch(e){
-		Sentry.captureException(e);
+			await axios.get(`${url}/xml/process_queue`).then(resp => {
+				console.log(resp.data)
+			}).catch(error => {
+				Sentry.captureException('Erro ao rodar a cron - ' + error)
+			})
+	
+		}catch(e){
+			Sentry.captureException(e);
+		}
 	}
 	
 })
