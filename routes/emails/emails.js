@@ -249,6 +249,9 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 			await redis_client.del(key)
 
 			res.status(201)
+
+			await cache.clear()
+			
 			res.send({success: true, message: 'E-mail salvo com sucesso.'})
 		}else{
 			res.send({success: true, message: 'Erro ao salvar o e-mail.'})
