@@ -2,12 +2,6 @@ import axios from 'axios'
 import cron from 'node-cron'
 import moment from 'moment'
 import 'dotenv/config'
-import * as Sentry from '@sentry/node'
-
-Sentry.init({
-	dsn: process.env.SENTRY_URL,
-	tracesSampleRate: 1.0,
-})
 
 console.log()
 // console.log(' ------------------------------------------- ')
@@ -37,7 +31,7 @@ cron.schedule('*/10 * * * * *', async () => {
 			})
 	
 		}catch(e){
-			Sentry.captureException(e);
+			
 		}
 	}
 	

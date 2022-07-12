@@ -123,6 +123,6 @@ if(process.env.TYPE_SSL == 'server'){
 
 }else{
 	app.listen(process.env.PORT || 3000, () => {
-		console.log('Rodando localmente em http://localhost:' + process.env.PORT || 3000 + '!')
+		console.log('Rodando em http://localhost:' + process.env.PORT || 3000 + '!')
 	})
 }
