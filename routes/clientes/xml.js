@@ -1,12 +1,12 @@
 import express from 'express'
 import axios from 'axios'
-import moment from 'moment-timezone'
+import moment from 'moment'
 import mongoose from 'mongoose'
 
 import xml2js from 'xml2js'
 import fs from 'fs'
 import path from 'path'
-import * as Sentry from '@sentry/node'
+// import * as Sentry from '@sentry/node'
 
 const __dirname = path.resolve(path.dirname(''))
 const router = express.Router()
@@ -21,10 +21,10 @@ import verifySuper from '../../middleware/valid_super.js'
 import '../../models/empresas.js'
 const empresasSchema = mongoose.model(`${process.env.MDB_PREFIX}empresas`)
 
-Sentry.init({
-	dsn: process.env.SENTRY_URL,
-	tracesSampleRate: 1.0,
-})
+// Sentry.init({
+// 	dsn: process.env.SENTRY_URL,
+// 	tracesSampleRate: 1.0,
+// })
 
 import ProdutosXML from './produtos.js'
 
@@ -170,14 +170,14 @@ router.get('/add_to_queue', async (req, res, next) => {
 						await clientesSchema.updateOne({'_id' : cliente._id}, {'$set' : {updated_at: moment().format('YYYY-MM-DD HH:mm:ss'), updated_by: 'Rotina do sistema'}}, {'upsert' : true}).then(() => {
 							res.send({success: 1, message: 'XML adicionado a fila de atualização.'})
 						}).catch(e =>{
-							Sentry.captureException(e)
+							// Sentry.captureException(e)
 						})
 	
 					}else{
 						res.send({success: 1, message: 'Erro ao obter dados do XML.'})
 					}
 				}).catch(e => {
-					Sentry.captureException(e)
+					// Sentry.captureException(e)
 				})
 				
 			})
@@ -185,7 +185,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 		})
 
 	}catch(e){
-		Sentry.captureException(e)
+		// Sentry.captureException(e)
 	}
 
 })
@@ -204,7 +204,7 @@ router.get('/process_queue', async (req, res, next) => {
 				// Caso não encontre nenhuma empresa, retorna erro e registra no sentry
 				if(err){
 					
-					Sentry.captureException('Erro ao obter os dados da empresa')
+					// Sentry.captureException('Erro ao obter os dados da empresa')
 					res.send({success: 0, message: 'Erro ao obter os dados da empresa'})
 
 				}else{
@@ -290,7 +290,7 @@ router.get('/process_queue', async (req, res, next) => {
 									}else{
 
 										// Envia a falha para o Sentry
-										Sentry.captureException(`Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`)
+										// Sentry.captureException(`Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`)
 
 										res.send({success: 1, message: `Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`})
 
@@ -302,7 +302,7 @@ router.get('/process_queue', async (req, res, next) => {
 									redis_client.setMore(key_failure, queues[0], process.env.EXP_XML_QUEUES)
 
 									// Envia a falha para o Sentry
-									Sentry.captureException(`Erro ao ler o chanel de produtos do XML do cliente: ${queues[0].cliente_nome}.`)
+									// Sentry.captureException(`Erro ao ler o chanel de produtos do XML do cliente: ${queues[0].cliente_nome}.`)
 
 									res.send({success: 0, message: `Erro ao ler o chanel de produtos do XML do cliente: ${queues[0].cliente_nome}.`})
 
@@ -317,7 +317,7 @@ router.get('/process_queue', async (req, res, next) => {
 
 							}else{
 								// Envia a falha para o Sentry
-								Sentry.captureException(`Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome} - ${error}`)
+								// Sentry.captureException(`Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome} - ${error}`)
 								
 								res.send({success: 0, message: `Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome}`})
 							}
@@ -332,7 +332,7 @@ router.get('/process_queue', async (req, res, next) => {
 		})
 
 	} catch (e) {
-		Sentry.captureException(e);
+		// Sentry.captureException(e);
 	}
 
 })

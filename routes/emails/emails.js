@@ -95,11 +95,11 @@ import '../../models/clientes/clientes.js'
 
 // })
 
-router.get('/', cache.set('memory', 3600, 'emails'), verifyJWT, verifyEmpresa, (req, res, next) => {
+router.get('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 	verifyPermissions(req, res, next, 'emails')
 
-}, async (req, res) => {
+}, cache.set('memory', 3600, 'emails'), async (req, res) => {
 
 	const empresa_id = req.query.empresa_id
 
