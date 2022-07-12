@@ -18,15 +18,16 @@ console.log()
 
 let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.env.PORT}` : process.env.PRODUCTION_URL
 
-cron.schedule('*/120 * * * * *', async () => {
+// 120
+cron.schedule('*/30 * * * * *', async () => {
 
 	if(parseInt(moment().format("mm")) > 20 && parseInt(moment().format("mm")) < 59){
 		
-		console.log()
-		console.log(' ------------------------------------------------- ')
-		console.log(`  ${parseInt(moment().format("mm"))} - Fora do horário de atualização de XML...  (Horário de atividade: Abaixo do minuto 20) URL: ${url}`)
-		console.log(' ------------------------------------------------- ')
-		console.log()
+		// console.log()
+		// console.log(' ------------------------------------------------- ')
+		// console.log(`  ${parseInt(moment().format("mm"))} - Fora do horário de atualização de XML...  (Horário de atividade: Abaixo do minuto 20) URL: ${url}`)
+		// console.log(' ------------------------------------------------- ')
+		// console.log()
 		
 		return
 	}
