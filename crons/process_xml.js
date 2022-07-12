@@ -15,6 +15,7 @@ console.info('  Processo liberação de queues iniciado...')
 console.log(' ------------------------------------------- ')
 console.log()
 
+let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.env.PORT}` : process.env.PRODUCTION_URL
 
 cron.schedule('*/30 * * * * *', async () => {
 	
@@ -22,7 +23,7 @@ cron.schedule('*/30 * * * * *', async () => {
 		
 		console.log()
 		console.log(' ------------------------------------------------- ')
-		console.log('   Fora do horário de atualização de produtos (Horário de atividade: Acima do minuto 30)...')
+		console.log(`  ${moment().format("HH:mm")} - Fora do horário de atualização de produtos (Horário de atividade: Acima do minuto 30)...`)
 		console.log(' ------------------------------------------------- ')
 		console.log()
 		
@@ -31,7 +32,6 @@ cron.schedule('*/30 * * * * *', async () => {
 
 	try{
 
-		let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.env.PORT}` : process.env.HOST
 		await axios.get(`${url}/xml/process_queue`).then(resp => {
 			console.log(resp.data)
 		}).catch(error => {
