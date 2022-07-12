@@ -6,9 +6,11 @@ import 'dotenv/config'
 let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.env.PORT}` : process.env.PRODUCTION_URL
 
 // 30
-if(parseInt(moment().format("HH")) > 0 && parseInt(moment().format("HH")) < 7){
-	cron.schedule('*/30 * * * * *', async () => {
-		
+
+cron.schedule('*/30 * * * * *', async () => {
+	
+	if(parseInt(moment().format("HH")) > 0 && parseInt(moment().format("HH")) < 7){
+
 		if(parseInt(moment().format("mm")) > 25 && parseInt(moment().format("mm")) < 59){
 			
 			try{
@@ -26,5 +28,5 @@ if(parseInt(moment().format("HH")) > 0 && parseInt(moment().format("HH")) < 7){
 			await redis_client.set('logs_crons:aviso:process_xml', 'Fora do horário de atualização de produtos. Minuto atual: '+moment().format("mm"), 60)
 		}
 		
-	})
-}
+	}
+})
