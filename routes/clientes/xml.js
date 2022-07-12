@@ -28,30 +28,10 @@ Sentry.init({
 
 import ProdutosXML from './produtos.js'
 
-import '../../models/produtos/produtos.js'
-const produtosSchema = mongoose.model(`${process.env.MDB_PREFIX}produtos`)
-
 import '../../models/clientes/clientes.js'
 
 const clientesSchema = mongoose.model(`${process.env.MDB_PREFIX}clientes`)
 
-router.get('/foto', async (req, res, next) => {
-	// ProdutosXML.sendPhoto()
-
-	const produto = await produtosSchema.findOne({
-		// 'cliente_id': mongoose.Types.ObjectId('62bf565bc0ea47745cca8eda'),
-		// 'produto.id': "25982"
-		"cliente_id": mongoose.Types.ObjectId("62bf57a2c0ea47745cca8efb"),
-        "produto.id": "25982"
-	})
-	
-	res.send({produto: produto.produto[0].id})
-})
-// router.get('/teste', async (req, res, next) => {
-// 	const produtos = await produtosSchema.find({cliente_id: '62bf565bc0ea47745cca8eda'})
-
-// 	res.send({total: produtos.length})
-// })
 
 router.get('/add_to_queue', async (req, res, next) => {
 
@@ -79,7 +59,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 			clientesSchema.findOne(query).skip(random).exec( async (err, cliente) => {
 
 				if(cliente == null){
-					res.send({success: 0, message: 'Não foram encontrados outros clientes para colocar na fila, ou todos já foram atualizados...'})	
+					redis_client.set('logs_queue:aviso:geral', 'Não foram encontrados outros clientes para colocar na fila, ou todos já foram atualizados...', 60)
 					return
 				}
 
@@ -106,7 +86,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 					}).indexOf(cliente._id.toString())
 					
 					if(index > -1){
-						res.send({success: 0, message: 'Esse cliente já está na fila de processamento de XML.'})
+						redis_client.set('logs_queue:aviso:geral', 'Esse cliente já está na fila de processamento de XML.', 60)
 						return
 					}
 	
@@ -124,7 +104,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 						await redis_client.del(`xml_queues:success:empresa_id:${cliente.empresa_id}`)
 						await redis_client.del(`xml_queues:waiting:empresa_id:${cliente.empresa_id}`)
 
-						res.send({success: 0, message: 'Esse cliente foi atualizado agora a pouco.'})
+						redis_client.set('logs_queue:aviso:geral', 'Esse cliente foi atualizado agora há pouco.', 60)
 						return
 					}
 					
@@ -168,16 +148,20 @@ router.get('/add_to_queue', async (req, res, next) => {
 
 						// Atualiza a data no cadastro do cliente
 						await clientesSchema.updateOne({'_id' : cliente._id}, {'$set' : {updated_at: moment().format('YYYY-MM-DD HH:mm:ss'), updated_by: 'Rotina do sistema'}}, {'upsert' : true}).then(() => {
-							res.send({success: 1, message: 'XML adicionado a fila de atualização.'})
+							
+							redis_client.set('logs_queue:aviso:geral', `XML cliente: ${cliente._id} adicionado a fila de atualização.`, 60)
+
 						}).catch(e =>{
-							Sentry.captureException(e)
+
+							redis_client.set('logs_queue:error:exception', e, 60)
+							
 						})
 	
 					}else{
-						res.send({success: 1, message: 'Erro ao obter dados do XML.'})
+						redis_client.set('logs_queue:error:xml_notfound', 'Erro ao obter dados do XML.', 60)
 					}
 				}).catch(e => {
-					Sentry.captureException(e)
+					redis_client.set('logs_queue:error:exception', e, 60)
 				})
 				
 			})
@@ -185,7 +169,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 		})
 
 	}catch(e){
-		Sentry.captureException(e)
+		redis_client.set('logs_queue:error:exception', e, 60)
 	}
 
 })
@@ -204,8 +188,7 @@ router.get('/process_queue', async (req, res, next) => {
 				// Caso não encontre nenhuma empresa, retorna erro e registra no sentry
 				if(err){
 					
-					Sentry.captureException('Erro ao obter os dados da empresa')
-					res.send({success: 0, message: 'Erro ao obter os dados da empresa'})
+					redis_client.set('logs_xml_process:error:empresa_notfound', 'Erro ao obter os dados da empresa', 60)
 
 				}else{
 
@@ -224,6 +207,11 @@ router.get('/process_queue', async (req, res, next) => {
 						const xml_dir = `${__dirname}/storage/tmp_xml/${queues[0].cliente_id}.xml`
 						let parser = new xml2js.Parser()
 						let xml_string = fs.readFileSync(xml_dir, "utf8")
+
+						if (!fs.existsSync(xml_dir)) {
+							redis_client.set('logs_xml_process:error:xml_notfound', `Não existe: ${xml_dir}`, 60)
+							return
+						}
 
 						parser.parseString(xml_string, async (error, result) => {
 							if(error === null){
@@ -245,9 +233,7 @@ router.get('/process_queue', async (req, res, next) => {
 									// Adiciona na fila de falha
 									redis_client.setMore(key_failure, queues[0], process.env.EXP_XML_QUEUES)
 
-									Sentry.captureException(`XML do cliente não possui tag CHANNEL ou ENTRY: Cliente: ${queues[0].cliente_nome}.`)
-
-									res.send({success: 0, message: `XML do cliente não possui tag CHANNEL ou ENTRY: Cliente: ${queues[0].cliente_nome}.`})
+									redis_client.set('logs_xml_process:error:xml_error', `XML do cliente não possui tag CHANNEL ou ENTRY: Cliente: ${queues[0].cliente_nome}.`, 60)
 
 									// Remove o item que foi processado ou retornado falha
 									queues.splice(0, 1)
@@ -289,10 +275,7 @@ router.get('/process_queue', async (req, res, next) => {
 										// fs.unlinkSync(xml_dir)
 									}else{
 
-										// Envia a falha para o Sentry
-										Sentry.captureException(`Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`)
-
-										res.send({success: 1, message: `Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`})
+										redis_client.set('logs_xml_process:error:product_error:db_save', `Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`, 60)
 
 									}									
 
@@ -301,10 +284,7 @@ router.get('/process_queue', async (req, res, next) => {
 									// Adiciona na fila de falha
 									redis_client.setMore(key_failure, queues[0], process.env.EXP_XML_QUEUES)
 
-									// Envia a falha para o Sentry
-									Sentry.captureException(`Erro ao ler o chanel de produtos do XML do cliente: ${queues[0].cliente_nome}.`)
-
-									res.send({success: 0, message: `Erro ao ler o chanel de produtos do XML do cliente: ${queues[0].cliente_nome}.`})
+									redis_client.set('logs_xml_process:error:xml_error:channel_read', `Erro ao ler o channel de produtos do XML do cliente: ${queues[0].cliente_nome}.`, 60)
 
 									// E remove esse item da fila de aguarando
 									queues.splice(0, 1)
@@ -316,23 +296,21 @@ router.get('/process_queue', async (req, res, next) => {
 								}
 
 							}else{
-								// Envia a falha para o Sentry
-								Sentry.captureException(`Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome} - ${error}`)
-								
-								res.send({success: 0, message: `Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome}`})
+								redis_client.set('logs_xml_process:error:xml_error:xml_read', `Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome}`, 60)
 							}
 						})
 
 
 					}else{
-						res.send({success: 0, message: `Não há itens na fila de clientes da empresa: ${empresa._id} - ${moment().format("YYYY-MM-DD HH:mm:ss")}`})
+
+						redis_client.set('logs_xml_process:aviso:processo_finalizado', `Não há itens na fila de clientes da empresa: ${empresa._id}`, 60)
 					}
 				}
 			})
 		})
 
 	} catch (e) {
-		Sentry.captureException(e);
+		redis_client.set('logs_xml_process:error:geral', e, 60)
 	}
 
 })
