@@ -57,7 +57,6 @@ router.post('/', async (req, res) => {
 	// Busca o usuário pelo e-mail
 	await usersSchema.findOne({ email: req.body.email }).then(async resp_user => {
 
-		console.log(resp_user)
 
 		if (resp_user == null) {
 			res.send({ 'success': res.locals.error, 'message': 'E-mail não encontrado.' })
@@ -67,7 +66,8 @@ router.post('/', async (req, res) => {
 				let type = process.env.SMTP_TYPE_ENVIO
 				let code = `${Math.floor(100 + Math.random() * 900)} ${Math.floor(100 + Math.random() * 900)} ${Math.floor(100 + Math.random() * 900)}`
 				let msg_body = `Olá, use o código abaixo para criar uma nova senha no Adxmail:<br /><h3>${code}</h3><br />Desconsidere caso você não tenha solicitado esse e-mail.`
-				let enviaEmail = await sendMail(type, 'renan.dev@hotmail.com', 'Use esse código para criar uma nova senha no ADXMail', msg_body)
+				
+				let enviaEmail = await sendMail(type, resp_user.email, 'Use esse código para criar uma nova senha no ADXMail', msg_body)
 				
 				if(type == 'test'){
 					console.log(enviaEmail)
