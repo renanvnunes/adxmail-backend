@@ -147,13 +147,24 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 	let produtos = []
 	
 	for(let p of products){
+
+		let parcelas = null
+		let parcela_valor = null
+		if(p.parcelas){
+			for(let parc of p.parcelas){
+				parcelas = parc['g:months'][0]
+				parcela_valor = moneyBr(parc['g:amount'][0].replace('BRL', '').trim())
+			}
+		}
 		produtos.push({
 			nome: p.nome,
 			preco: p.preco ? moneyBr(p.preco.replace('BRL', '').trim()) : null,
 			preco_desconto: p.preco_desconto ? moneyBr(p.preco_desconto.replace('BRL', '').trim()) : null,
 			foto: p.foto,
 			link: p.link,
-			col: p.col
+			col: p.col,
+			parcelas: parcelas,
+			parcela_valor: parcela_valor,
 		})
 	}
 

@@ -81,6 +81,10 @@
 												<div style="text-align: center; font-family: 'Arial';">Por R$ <b>{{ this.preco }}</b></div>
 												{{/if}}
 
+												{{#if this.parcelas}}
+													<small>Ou em até <b>{{this.parcelas}}x</b> de R$ <b>{{this.parcela_valor}}</b></small>
+												{{/if}}
+
 												<div style="margin-top: 15px;">
 
 													<div style="text-align: center;">
