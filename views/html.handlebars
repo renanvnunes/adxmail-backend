@@ -28,10 +28,21 @@
 							{{#if email.link_topo_adicional}}
 							<a href="{{{ email.link_topo_adicional }}}" target="_blank">
 							{{/if}}
-								<img width="700" src="{{{ public_cdn }}}/emails/{{{ email.imagem_topo_adicional }}}" />
+
+								{{#if email.imagem_topo_adicional }}
+
+									{{#if render_production }}
+									<img width="700" src="{{{ public_cdn }}}/emails/{{{ email.imagem_topo_adicional }}}" />
+									{{else}}
+									<img width="700" src="{{{ email.imagem_topo_adicional }}}" />
+									{{/if}}
+
+								{{/if}}
+
 							{{#if email.link_topo_adicional}}
 							</a>
 							{{/if}}
+							
 						</td>
 					</tr>
 				</table>
@@ -98,7 +109,17 @@
 							{{#if email.link_rodape_adicional}}
 							<a href="{{{ email.link_rodape_adicional }}}" target="_blank">
 							{{/if}}
-								<img width="700" src="{{{ public_cdn }}}/emails/{{{ email.imagem_rodape_adicional }}}" />
+
+								{{#if email.imagem_rodape_adicional }}
+
+									{{#if render_production }}
+									<img width="700" src="{{{ public_cdn }}}/emails/{{{ email.imagem_rodape_adicional }}}" />
+									{{else}}
+									<img width="700" src="{{{ email.imagem_rodape_adicional }}}" />
+									{{/if}}
+
+								{{/if}}
+
 							{{#if email.link_rodape_adicional}}
 							</a>
 							{{/if}}

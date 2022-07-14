@@ -307,6 +307,10 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 		topo: email.topo,
 		rodape: email.rodape,
+
+		link_topo: email.link_topo,
+		link_rodape: email.link_rodape,
+		
 		botao: email.botao,
 		obs: fields.obs,
 

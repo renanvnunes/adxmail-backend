@@ -20,7 +20,7 @@ router.get('/public/:id', async (req, res, next) => {
 		return
 	}
 
-	const email = await emailsSchema.findOne({ _id: mongoose.Types.ObjectId(id) }, {empresa_id: 1, nome: 1, topo: 1, rodape: 1, botao: 1, link_topo: 1, link_rodape: 1, produtos: 1, migrado: 1, facebook: 1, instagram: 1, youtube: 1, tiktok: 1, topo_adicional: 1, rodape_adicional: 1, link_topo_adicional: 1, link_rodape_adicional: 1})
+	const email = await emailsSchema.findOne({ _id: mongoose.Types.ObjectId(id) })
 
 	if(email == null){
 		res.send(outputMsg(false, 'E-mail não encontrado.'))
@@ -65,19 +65,20 @@ router.get('/public/:id', async (req, res, next) => {
 
 		imagem_topo_adicional   : email.topo_adicional,
 		imagem_rodape_adicional : email.rodape_adicional,
-		link_topo_adicional     : email.link_topo_adicional,
-		link_rodape_adicional   : email.link_rodape_adicional,
+		link_topo_adicional     : email.topo_adicional_link,
+		link_rodape_adicional   : email.rodape_adicional_link,
 
 		produtos: email.produtos,
 	}
 
-	console.log(email_render)
-
 	let render = {
 		email: email_render,
 		redirect_base: process.env.HTML_REDIRECT_BASE,
+		render_production: true,
 		public_cdn: public_cdn
 	}
+
+	// console.log(render)
 
 	res.render('html', render)
 })

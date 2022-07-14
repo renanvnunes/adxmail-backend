@@ -19,6 +19,9 @@ const emailsSchema = new Schema({
 
 	topo: String,
 	rodape: String,
+	link_topo: String,
+	link_rodape: String,
+
 	botao: String,
 	obs: String,
 
