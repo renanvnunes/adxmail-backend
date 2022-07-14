@@ -57,6 +57,8 @@ router.post('/', async (req, res) => {
 	// Busca o usuário pelo e-mail
 	await usersSchema.findOne({ email: req.body.email }).then(async resp_user => {
 
+		console.log(resp_user)
+
 		if (resp_user == null) {
 			res.send({ 'success': res.locals.error, 'message': 'E-mail não encontrado.' })
 		} else {

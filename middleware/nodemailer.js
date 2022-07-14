@@ -24,6 +24,8 @@ export default {
 			html: message_body, // html body
 		})
 
+		console.log(nodemailer)
+
 		return type == 'test' ? nodemailer.getTestMessageUrl(send) : send 
 	}
 }
