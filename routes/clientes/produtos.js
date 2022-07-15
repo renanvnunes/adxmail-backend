@@ -54,9 +54,6 @@ class ProdutosXML{
 				itens.push(produto)
 			}
 
-			console.log(produto)
-			return
-
 		}
 
 		
