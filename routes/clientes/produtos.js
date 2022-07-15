@@ -18,7 +18,7 @@ class ProdutosXML{
 		for(let item of xml_itens){
 
 			let produto = {}
-			for(let key of Object.keys(xml_itens[0])){
+			for(let key of Object.keys(xml_itens[4])){
 				
 				let new_key = key.replace('g:', '')
 				let new_value = ''
@@ -29,7 +29,6 @@ class ProdutosXML{
 					new_value = item[key]
 				}
 				
-
 				if(new_key == 'id'){ produto.item_sku = new_value }
 				if(new_key == 'title'){ produto.nome = new_value.trim() }
 				if(new_key == 'link'){ produto.link = new_value.trim() }
@@ -37,16 +36,14 @@ class ProdutosXML{
 				if(new_key == 'installment'){ produto.parcelas = new_value }
 				
 				if(new_key == 'sale_price'){ produto.preco_desconto = new_value }
-				// if(new_key == 'sale_price'){ produto.preco_desconto = new_value instanceof String ? new_value.replace(/\D/g,'') : new_value }
 				if(new_key == 'price'){ produto.preco = new_value }
-				// if(new_key == 'price'){ produto.preco = new_value instanceof String ? new_value.replace(/\D/g,'') : new_value }
 
 				if(new_key == 'availability'){ 
 					produto.in_stock = new_value ==  'in stock' ? true : false
 				}
-				
+	
 			}
-			
+
 			if(produto.in_stock == undefined){
 				produto.in_stock = true
 			}
@@ -56,7 +53,12 @@ class ProdutosXML{
 			if(produto.in_stock == true){
 				itens.push(produto)
 			}
+
+			console.log(produto)
+			return
+
 		}
+
 		
 		const save_products = await produtosSchema.create(itens)
 
