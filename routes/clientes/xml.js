@@ -205,13 +205,15 @@ router.get('/process_queue', async (req, res, next) => {
 					if(queues_redis != null && queues.length > 0){
 						
 						const xml_dir = `${__dirname}/storage/tmp_xml/${queues[0].cliente_id}.xml`
-						let parser = new xml2js.Parser()
-						let xml_string = fs.readFileSync(xml_dir, "utf8")
-
+						
 						if (!fs.existsSync(xml_dir)) {
 							redis_client.set('logs_xml_process:error:xml_notfound', `Não existe: ${xml_dir}`, 60)
 							return
 						}
+
+						let parser = new xml2js.Parser()
+						let xml_string = fs.readFileSync(xml_dir, "utf8")
+
 
 						parser.parseString(xml_string, async (error, result) => {
 							if(error === null){
