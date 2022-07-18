@@ -9,7 +9,7 @@ let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.en
 
 cron.schedule('*/30 * * * * *', async () => {
 	
-	if(parseInt(moment().format("HH")) > 0 && parseInt(moment().format("HH")) < 7){
+	if(parseInt(moment().format("HH")) > process.env.CRON_HOUR_START && parseInt(moment().format("HH")) < process.env.CRON_HOUR_END){
 
 		if(parseInt(moment().format("mm")) > 25 && parseInt(moment().format("mm")) < 59){
 			
