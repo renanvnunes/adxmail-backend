@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import axios from 'axios'
 import cron from 'node-cron'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 import redis_client from '../connections/redis.js'
 
