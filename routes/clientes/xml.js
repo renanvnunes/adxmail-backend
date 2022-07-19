@@ -59,7 +59,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 			clientesSchema.findOne(query).skip(random).exec( async (err, cliente) => {
 
 				if(cliente == null){
-					redis_client.set('logs_queue:aviso:geral', 'Não foram encontrados outros clientes para colocar na fila, ou todos já foram atualizados...', 60)
+					redis_client.set('logs_queue:aviso:geral', 'Não foram encontrados outros clientes para colocar na fila, ou todos já foram atualizados...', 3600)
 					res.send({success: 1, message: 'Não foram encontrados outros clientes para colocar na fila, ou todos já foram atualizados...'})
 					return
 				}
@@ -87,7 +87,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 					}).indexOf(cliente._id.toString())
 					
 					if(index > -1){
-						redis_client.set('logs_queue:aviso:geral', 'Esse cliente já está na fila de processamento de XML.', 60)
+						redis_client.set('logs_queue:aviso:geral', 'Esse cliente já está na fila de processamento de XML.', 3600)
 						res.send({success: 1, message: 'Esse cliente já está na fila de processamento de XML.'})
 						return
 					}
@@ -106,7 +106,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 						await redis_client.del(`xml_queues:success:empresa_id:${cliente.empresa_id}`)
 						await redis_client.del(`xml_queues:waiting:empresa_id:${cliente.empresa_id}`)
 
-						redis_client.set('logs_queue:aviso:geral', 'Esse cliente foi atualizado agora há pouco.', 60)
+						redis_client.set('logs_queue:aviso:geral', 'Esse cliente foi atualizado agora há pouco.', 3600)
 						res.send({success: 1, message: 'Esse cliente foi atualizado agora há pouco.'})
 						return
 					}
@@ -152,23 +152,23 @@ router.get('/add_to_queue', async (req, res, next) => {
 						// Atualiza a data no cadastro do cliente
 						await clientesSchema.updateOne({'_id' : cliente._id}, {'$set' : {updated_at: moment().format('YYYY-MM-DD HH:mm:ss'), updated_by: 'Rotina do sistema'}}, {'upsert' : true}).then(() => {
 							
-							redis_client.set('logs_queue:aviso:geral', `XML cliente: ${cliente._id} adicionado a fila de atualização.`, 60)
+							redis_client.set('logs_queue:aviso:geral', `XML cliente: ${cliente._id} adicionado a fila de atualização.`, 3600)
 
 							res.send({success: 1, message: `XML cliente: ${cliente._id} adicionado a fila de atualização.`})
 
 						}).catch(e =>{
 
-							redis_client.set('logs_queue:error:exception', e, 60)
+							redis_client.set('logs_queue:error:exception', e, 3600)
 							res.send({success: 1, message: e})
 							
 						})
 	
 					}else{
-						redis_client.set('logs_queue:error:xml_notfound', 'Erro ao obter dados do XML.', 60)
+						redis_client.set('logs_queue:error:xml_notfound', 'Erro ao obter dados do XML.', 3600)
 						res.send({success: 1, message: 'Erro ao obter dados do XML.'})
 					}
 				}).catch(e => {
-					redis_client.set('logs_queue:error:exception', e, 60)
+					redis_client.set('logs_queue:error:exception', e, 3600)
 					res.send({success: 1, message: e})
 				})
 				
@@ -177,7 +177,7 @@ router.get('/add_to_queue', async (req, res, next) => {
 		})
 
 	}catch(e){
-		redis_client.set('logs_queue:error:exception', e, 60)
+		redis_client.set('logs_queue:error:exception', e, 3600)
 		res.send({success: 1, message: e})
 	}
 
@@ -197,7 +197,7 @@ router.get('/process_queue', async (req, res, next) => {
 				// Caso não encontre nenhuma empresa, retorna erro e registra no sentry
 				if(err){
 					
-					redis_client.set('logs_xml_process:error:empresa_notfound', 'Erro ao obter os dados da empresa', 60)
+					redis_client.set('logs_xml_process:error:empresa_notfound', 'Erro ao obter os dados da empresa', 3600)
 					res.send({success: 0, message: 'Erro ao obter os dados da empresa'})
 
 				}else{
@@ -217,7 +217,7 @@ router.get('/process_queue', async (req, res, next) => {
 						const xml_dir = `${__dirname}/storage/tmp_xml/${queues[0].cliente_id}.xml`
 						
 						if (!fs.existsSync(xml_dir)) {
-							redis_client.set('logs_xml_process:error:xml_notfound', `Não existe: ${xml_dir}`, 60)
+							redis_client.set('logs_xml_process:error:xml_notfound', `Não existe: ${xml_dir}`, 3600)
 							res.send({success: 0, message: `Não existe: ${xml_dir}`})
 							return
 						}
@@ -246,7 +246,7 @@ router.get('/process_queue', async (req, res, next) => {
 									// Adiciona na fila de falha
 									redis_client.setMore(key_failure, queues[0], process.env.EXP_XML_QUEUES)
 
-									redis_client.set('logs_xml_process:error:xml_error', `XML do cliente não possui tag CHANNEL ou ENTRY: Cliente: ${queues[0].cliente_nome}.`, 60)
+									redis_client.set('logs_xml_process:error:xml_error', `XML do cliente não possui tag CHANNEL ou ENTRY: Cliente: ${queues[0].cliente_nome}.`, 3600)
 
 									// Remove o item que foi processado ou retornado falha
 									queues.splice(0, 1)
@@ -290,7 +290,7 @@ router.get('/process_queue', async (req, res, next) => {
 										// fs.unlinkSync(xml_dir)
 									}else{
 
-										redis_client.set('logs_xml_process:error:product_error:db_save', `Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`, 60)
+										redis_client.set('logs_xml_process:error:product_error:db_save', `Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`, 3600)
 
 										res.send({success: 0, message: `Erro ao salvar os produtos do cliente: ${queues[0].cliente_nome}.`})
 
@@ -301,7 +301,7 @@ router.get('/process_queue', async (req, res, next) => {
 									// Adiciona na fila de falha
 									redis_client.setMore(key_failure, queues[0], process.env.EXP_XML_QUEUES)
 
-									redis_client.set('logs_xml_process:error:xml_error:channel_read', `Erro ao ler o channel de produtos do XML do cliente: ${queues[0].cliente_nome}.`, 60)
+									redis_client.set('logs_xml_process:error:xml_error:channel_read', `Erro ao ler o channel de produtos do XML do cliente: ${queues[0].cliente_nome}.`, 3600)
 
 									// E remove esse item da fila de aguarando
 									queues.splice(0, 1)
@@ -315,7 +315,7 @@ router.get('/process_queue', async (req, res, next) => {
 								}
 
 							}else{
-								redis_client.set('logs_xml_process:error:xml_error:xml_read', `Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome}`, 60)
+								redis_client.set('logs_xml_process:error:xml_error:xml_read', `Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome}`, 3600)
 								res.send({success: 0, message: `Erro ao obter dados do XML. Cliente: ${queues[0].cliente_nome}`})
 							}
 						})
@@ -323,7 +323,7 @@ router.get('/process_queue', async (req, res, next) => {
 
 					}else{
 
-						redis_client.set('logs_xml_process:aviso:processo_finalizado', `Não há itens na fila de clientes da empresa: ${empresa._id}`, 60)
+						redis_client.set('logs_xml_process:aviso:processo_finalizado', `Não há itens na fila de clientes da empresa: ${empresa._id}`, 3600)
 						res.send({success: 0, message: `Não há itens na fila de clientes da empresa: ${empresa._id}`})
 					}
 				}
@@ -331,7 +331,7 @@ router.get('/process_queue', async (req, res, next) => {
 		})
 
 	} catch (e) {
-		redis_client.set('logs_xml_process:error:geral', e, 60)
+		redis_client.set('logs_xml_process:error:geral', e, 3600)
 		res.send({success: 0, message: e})
 	}
 
