@@ -16,7 +16,7 @@ cron.schedule('*/200 * * * * *', async () => {
 			try{
 			
 				await axios.get(`${url}/xml/add_to_queue`).then(resp => {
-					
+					console.log(resp.data)
 				}).catch(async error => {
 					await redis_client.set('logs_crons:erro:queue_xml', 'Erro ao rodar a cron de (add_to_queue) - ' + error, 60)
 				})

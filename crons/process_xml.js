@@ -16,6 +16,8 @@ cron.schedule('*/30 * * * * *', async () => {
 			try{
 
 				await axios.get(`${url}/xml/process_queue`).then(resp => {
+
+					console.log(resp.data)
 					
 				}).catch(async error => {
 					await redis_client.set('logs_crons:erro:process_queue', 'Erro ao rodar a cron de (process_queue) - ' + error, 60)
