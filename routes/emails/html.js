@@ -47,7 +47,8 @@ router.get('/public/:id', async (req, res, next) => {
 			email.produtos[i].col2 = 180
 		}
 		
-		email.produtos[i].foto = email.migrado == false ? `${public_cdn}/emails/${p.foto_cdn}` : p.foto
+		email.produtos[i].foto = email.migrado == false ? `${public_cdn}/emails/${p.foto}` : p.foto
+		// email.produtos[i].foto = email.migrado == false ? `${public_cdn}/emails/${p.foto_cdn}` : p.foto
 	}
 
 	let email_render = {
