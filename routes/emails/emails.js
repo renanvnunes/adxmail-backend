@@ -141,6 +141,7 @@ import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { s3Client } from '../../middleware/s3_client.js'
 import fs from 'fs'
 import Jimp from 'jimp'
+import axios from 'axios'
 
 router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
@@ -156,16 +157,6 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 	const empresa_id = req.query.empresa_id
 	const user = JSON.parse(req.user_data)
-
-	// Busca o e-mail temporário no redis
-	const key = `emails:empresa_id:${empresa_id}:user_id:${user.user_id}`
-	let get_email = await redis_client.get(key)
-	let email = JSON.parse(get_email)
-
-	if (email == null) {
-		res.send(outputMsg(false, 'Esse e-mail não pode ser salvo.'))
-		return
-	}
 
 	let image_dir = `storage/tmp_img/`
 
@@ -246,54 +237,103 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		}) 
 	}
 	
-	let produtos = []
-	for (let item of email.produtos) {
+	const resize = async (url_img, img_name, image_dir) => {
+		const image = await Jimp.read(url_img);
+		await image.resize(400, Jimp.AUTO).quality(70);
+		await image.writeAsync(`${image_dir}/${img_name}`);
 
-		const image_name = `email_${Math.random()}.jpg`
-		const key_foto = `${process.env.DO_SP_FOLDER}/company/${empresa_id}/emails/${image_name}`
-
-		item.foto_cdn = image_name
-
-		produtos.push(item)
-
-		// Obtem a foto pela URL
-		Jimp.read(item.foto).then(async image => {
-
-			await image.getBase64Async(Jimp.MIME_JPEG).then(async base64 => {
-
-				const data = base64.replace(`data:image/jpeg;base64,`, '')
-				const buffer = Buffer.from(data, "base64")
-
-				await Jimp.read(buffer, async (err, success) => {
-
-					if (success) {
-						await Jimp.read(success.resize(400, Jimp.AUTO).quality(70).write(image_dir + image_name)).then(async () => {
-
-							fs.readFile(image_dir + image_name, async (error, file) => {
-
-								const bucketParams = {
-									Bucket: process.env.DO_SP_NAME,
-									ContentType: `image/jpg`,
-									Key: key_foto,
-									ACL: 'public-read',
-									Body: file,
-								}
-
-								await s3Client.send(new PutObjectCommand(bucketParams))
-
-								fs.unlinkSync(image_dir + image_name)
-
-							})
-
-						})
-					}
-
-				})
-
-			})
-		})
-
+		return img_name;
 	}
+
+	let produtos = []
+	if(req.body.produtos.length > 0){
+
+		// Baixa todas as imagens
+		let imagens_baixadas = []
+		for (let item of req.body.produtos) {
+
+			await axios({
+						
+				method: 'get',
+				url: item.foto,
+				responseType: 'stream',
+
+			}).then(async resp => {
+				
+				if(resp.status == 200){
+					
+					const image_name = `email_${Math.random()}.jpg`
+
+					await resize(item.foto, image_name, image_dir)
+
+					imagens_baixadas.push({
+						name: image_name,
+						path: image_dir + image_name,
+						original_image:  item.foto
+					})
+
+					const key_foto = `${process.env.DO_SP_FOLDER}/company/${empresa_id}/emails/${image_name}`
+
+					fs.readFile(image_dir + image_name, async (error, file) => {
+
+						const bucketParams = {
+							Bucket: process.env.DO_SP_NAME,
+							ContentType: `image/jpg`,
+							Key: key_foto,
+							ACL: 'public-read',
+							Body: file,
+						}
+
+						await s3Client.send(new PutObjectCommand(bucketParams))					
+					})
+
+					// await new Promise(r => setTimeout(r, 5000))
+				
+				}
+
+			}).catch(() => {
+				console.log('error - ' + item.foto)
+			})
+		}
+
+		if(imagens_baixadas.length == 0){
+			res.send({success: 0, message: 'Erro ao baixar as imagens dos produtos, tente novamente.'})
+			return
+		}
+
+		for(let p of req.body.produtos){
+
+			let parcelas = null
+			let parcela_valor = null
+			if(p.parcelas){
+				for(let parc of p.parcelas){
+					parcelas = parc['g:months'][0]
+					parcela_valor = moneyBr(parc['g:amount'][0].replace('BRL', '').trim())
+				}
+			}
+
+			let index = imagens_baixadas.map(x => {
+				return x.original_image
+			}).indexOf(p.foto)
+		
+			if(index > -1){
+				fs.unlinkSync(imagens_baixadas[index].path)
+			}
+
+			produtos.push({
+				nome: p.nome,
+				preco: p.preco ? moneyBr(p.preco.replace('BRL', '').trim()) : null,
+				preco_desconto: p.preco_desconto ? moneyBr(p.preco_desconto.replace('BRL', '').trim()) : null,
+				foto: p.foto,
+				link: p.link,
+				col: p.col,
+				parcelas: parcelas,
+				parcela_valor: parcela_valor,
+				foto_cdn: index > -1 ? imagens_baixadas[index].name : null
+			})
+		}
+	}
+
 
 	let insert = new emailsSchema({
 		
@@ -303,16 +343,16 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		cliente_id: mongoose.Types.ObjectId(fields.cliente._id),
 		empresa_id: mongoose.Types.ObjectId(empresa_id),
 
-		nome: fields.nome,
+		nome : fields.nome,
 
-		topo: email.topo,
-		rodape: email.rodape,
+		topo   : fields.template.imagem_topo,
+		rodape : fields.template.imagem_rodape,
 
-		link_topo: email.link_topo,
-		link_rodape: email.link_rodape,
+		link_topo   : fields.template.link_topo,
+		link_rodape : fields.template.link_rodape,
 		
-		botao: email.botao,
-		obs: fields.obs,
+		botao : fields.template.imagem_botao,
+		obs   : fields.obs,
 
 		facebook     : fields.cliente.facebook,
 		instagram    : fields.cliente.instagram,
@@ -335,8 +375,7 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 	await insert.save(async (error, success) => {
 		
 		if(error == null){
-			await redis_client.del(key)
-
+			
 			res.status(201)
 
 			await cache.clear()
