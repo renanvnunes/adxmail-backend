@@ -1,7 +1,8 @@
+import moment from 'moment'
 import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema
-const default_date = new Date()
+const default_date = moment().format("YYYY-MM-DD HH:mm:ss")
 
 const emailsSchema = new Schema({
 	migrado: {
