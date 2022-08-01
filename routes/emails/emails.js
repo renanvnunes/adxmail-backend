@@ -291,8 +291,10 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 				
 				}
 
-			}).catch(() => {
+			}).catch(error => {
 				console.log('error - ' + item.foto)
+				console.log(error)
+				console.log()
 			})
 		}
 
