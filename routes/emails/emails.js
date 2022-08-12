@@ -98,7 +98,26 @@ import '../../models/clientes/clientes.js'
 
 router.get('/teste-data', (req, res) => {
 	const default_date = moment().toISOString("YYYY-MM-DD HH:mm:ss")
-	res.send({data: default_date})
+	res.send({
+		data: default_date,
+		data_br: moment(default_date).format("DD/MM/YYYY HH:mm") ,
+	})
+})
+
+router.get('/no-cache', async (req, res) => {
+
+	const empresa_id = req.query.empresa_id
+
+	let query = {
+		empresa_id: mongoose.Types.ObjectId(empresa_id)
+	}
+
+	await emailsSchema.find(query).sort({created_at: -1}).then(async resp => {
+
+		let found_documents = resp.length > 0 ? resp.length : 0
+
+		res.send(outputMsg(true, resp, found_documents, null))
+	})
 })
 
 router.get('/', verifyJWT, verifyEmpresa, (req, res, next) => {
