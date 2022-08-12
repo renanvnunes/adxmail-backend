@@ -390,6 +390,11 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 	})
 })
 
+router.post('/teste-data', (req, res) => {
+	const default_date = moment().toISOString("YYYY-MM-DD HH:mm:ss")
+	res.send({data: default_date})
+})
+
 router.delete('/:id', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 	verifyPermissions(req, res, next, 'emails')
