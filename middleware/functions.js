@@ -17,8 +17,10 @@ export default {
 
 		let replace1 = str.replace('BRL', '')
 		let replace2 = replace1.replace('R$', '')
+		let replace3 = replace2.replace(',', '.')
+		
 
-		let value = parseFloat(replace2.trim())
+		let value = parseFloat(replace3.trim())
 		return value.toLocaleString('pt-br', {minimumFractionDigits: 2})
 	}
 }
