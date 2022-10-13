@@ -6,7 +6,7 @@ class ClassRedis{
 	constructor(){
 		this.redis = new Redis({
 			host      : process.env.RD_HOST,  
-			port      : process.env.RD_PORT,
+			port      : Number(process.env.RD_PORT),
 			password  : process.env.RD_PASS,
 			username  : '',
 			keyPrefix : `${process.env.RD_PREFIX}:`,
