@@ -13,16 +13,6 @@ class ClassRedis{
 				host: process.env.RD_HOST
 			}
 		})
-		
-		console.log({
-			host      : process.env.RD_HOST,  
-			port      : Number(process.env.RD_PORT),
-			password  : process.env.RD_PASS,
-			keyPrefix : `${process.env.RD_PREFIX}:`,
-			tls: {
-				host: process.env.REDIS_HOST
-			}
-		})
 	}
 
 	async get_all(search)
