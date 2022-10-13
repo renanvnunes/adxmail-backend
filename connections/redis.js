@@ -10,7 +10,7 @@ class ClassRedis{
 			password  : process.env.RD_PASS,
 			keyPrefix : `${process.env.RD_PREFIX}:`,
 			tls: {
-				host: process.env.REDIS_HOST
+				host: process.env.RD_HOST
 			}
 		})
 		
