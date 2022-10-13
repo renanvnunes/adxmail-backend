@@ -8,8 +8,11 @@ class ClassRedis{
 			host      : process.env.RD_HOST,  
 			port      : process.env.RD_PORT,
 			password  : process.env.RD_PASS,
-			username  : process.env.RD_USER,
-			keyPrefix : `${process.env.RD_PREFIX}:`
+			username  : '',
+			keyPrefix : `${process.env.RD_PREFIX}:`,
+			tls: {
+				host: process.env.REDIS_HOST
+			}
 		})
 	}
 
