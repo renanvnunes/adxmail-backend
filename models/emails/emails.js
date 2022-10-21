@@ -5,9 +5,6 @@ const Schema = mongoose.Schema
 const default_date = moment().format('YYYY-MM-DD HH:mm:ss')
 // const default_date = moment().toISOString("YYYY-MM-DD HH:mm:ss")
 
-
-
-
 const emailsSchema = new Schema({
 	migrado: {
 		type: Boolean,

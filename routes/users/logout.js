@@ -10,19 +10,19 @@ const usersSchema = mongoose.model(`${process.env.MDB_PREFIX}users`)
 
 router.get('/', verifyJWT, async (req, res) => {
 	
-	const user_data = JSON.parse(req.user_data)
-	await usersSchema.findOne({ token: user_data.token }).then(async resp => {
+	// const user_data = JSON.parse(req.user_data)
+	// await usersSchema.findOne({ token: user_data.token }).then(async resp => {
 
-		const new_data = {
-			token: null
-		}
+	// 	const new_data = {
+	// 		token: null
+	// 	}
 	
-		await usersSchema.updateOne({'_id' : mongoose.Types.ObjectId(resp._id)}, {'$set' : new_data}, {'upsert' : true})
+	// 	await usersSchema.updateOne({'_id' : mongoose.Types.ObjectId(resp._id)}, {'$set' : new_data}, {'upsert' : true})
 
-		redis_client.del(`auth_users:_id:${resp._id.toString()}`)
-	})
+	// 	redis_client.del(`auth_users:_id:${resp._id.toString()}`)
+	// })
 	
-	res.send({success: 1, message: 'Usuário desconectado.'})	
+	// res.send({success: 1, message: 'Usuário desconectado.'})	
 
 })
 
