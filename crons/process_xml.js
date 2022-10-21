@@ -9,7 +9,7 @@ let url = process.env.TYPE_SERVER == 'local' ? `${process.env.HOST}:${process.en
 
 cron.schedule('*/60 * * * * *', async () => {
 	
-	if(parseInt(moment().format("HH")) > process.env.CRON_HOUR_START && parseInt(moment().format("HH")) < process.env.CRON_HOUR_END){
+	// if(parseInt(moment().format("HH")) > process.env.CRON_HOUR_START && parseInt(moment().format("HH")) < process.env.CRON_HOUR_END){
 
 		if(parseInt(moment().format("mm")) > 25 && parseInt(moment().format("mm")) < 59){
 			
@@ -28,5 +28,5 @@ cron.schedule('*/60 * * * * *', async () => {
 			await redis_client.set('logs_crons:aviso:process_xml', 'Fora do horário de atualização de produtos. Minuto atual: '+moment().format("mm"), 60)
 		}
 		
-	}
+	// }
 })
