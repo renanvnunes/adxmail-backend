@@ -17,7 +17,7 @@ router.get('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 	verifyPermissions(req, res, next, 'clientes')
 
-}, cache.set('memory', 3600, 'clientes'), async (req, res) => {
+}, async (req, res) => {
 	
 	const empresa_id = req.query.empresa_id
 

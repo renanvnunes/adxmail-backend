@@ -453,6 +453,8 @@ router.post('/queue', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 			redis_client.set(queue_key, queue_list, process.env.EXP_XML_QUEUES)
 
+			await clientesSchema.updateOne({'_id' : cliente_id}, {'$set' : {updated_at: moment().format('YYYY-MM-DD HH:mm:ss'), updated_by: 'Rotina do sistem'}}, {'upsert' : true})
+
 			res.send({success: 1, message: 'XML adicionado a fila de atualização.'})
 		}else{
 			res.send({success: 1, message: 'Erro ao obter dados do XML.'})
