@@ -13,6 +13,8 @@ class ClassRedis{
 		})
 	}
 
+	
+
 	async get_all(search)
 	{
 		const value = await this.redis.keys(search)
