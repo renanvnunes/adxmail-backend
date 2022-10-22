@@ -411,7 +411,7 @@ router.post('/queue', verifyJWT, verifyEmpresa, (req, res, next) => {
 		return new Promise((resolve, reject) => {
 			const file = fs.createWriteStream(filePath);
 			for (const row of arr) {
-			file.write(row + "\n");
+				file.write(row + "\n");
 			}
 			file.end();
 			file.on("finish", () => { resolve(true); }); // not sure why you want to pass a boolean
