@@ -9,8 +9,8 @@
 					<tr>
 						<td>
 							{{#if email.link_topo}}
-								<a href="{{ email.link_topo }}" target="_blank">
-								{{!-- <a href="{{{redirect_base}}}/redirect/{{ email._id }}?url={{ email.link_topo }}" target="_blank"> --}}
+								{{!-- <a href="{{ email.link_topo }}" target="_blank"> --}}
+								<a href="{{{redirect_base}}}/redirect/{{ email._id }}?url={{ email.link_topo }}" target="_blank">
 							{{/if}}
 
 									<img width="700" src="{{{ public_cdn }}}/templates/{{{ email.topo }}}">
@@ -62,8 +62,8 @@
 
 										<div style="padding: 15px;">
 
-											{{!-- <a style="color: #666; text-decoration: none;" target="_blank" href="{{{../redirect_base}}}/redirect/{{ ../email._id }}?url={{ this.link }}"> --}}
-											<a style="color: #666; text-decoration: none;" target="_blank" href="{{ this.link }}">
+											<a style="color: #666; text-decoration: none;" target="_blank" href="{{{../redirect_base}}}/redirect/{{ ../email._id }}?url={{ this.link }}">
+											{{!-- <a style="color: #666; text-decoration: none;" target="_blank" href="{{ this.link }}"> --}}
 
 												<img width="{{ this.col2 }}" src="{{ this.foto }}" alt="{{ this.nome }}">
 												
@@ -90,8 +90,8 @@
 												<div style="margin-top: 15px;">
 
 													<div style="text-align: center;">
-														{{!-- <a href="{{{../redirect_base}}}/redirect/{{ ../email._id }}?url={{ this.link }}" target="_blank"> --}}
-														<a href="{{ this.link }}" target="_blank">
+														<a href="{{{../redirect_base}}}/redirect/{{ ../email._id }}?url={{ this.link }}" target="_blank">
+														{{!-- <a href="{{ this.link }}" target="_blank"> --}}
 															<img width="200" src="{{{ ../public_cdn }}}/templates/{{ ../email.botao }}" />
 														</a>
 													</div>
@@ -138,8 +138,8 @@
 					<tr>
 						<td>
 							{{#if email.link_rodape}}
-								<a href="{{ email.link_rodape }}" target="_blank">
-								{{!-- <a href="{{{redirect_base}}}/redirect/{{ email._id }}?url={{ email.link_rodape }}" target="_blank"> --}}
+								{{!-- <a href="{{ email.link_rodape }}" target="_blank"> --}}
+								<a href="{{{redirect_base}}}/redirect/{{ email._id }}?url={{ email.link_rodape }}" target="_blank">
 							{{/if}}
 
 									<img width="700" src="{{{ public_cdn }}}/templates/{{{ email.rodape }}}">
