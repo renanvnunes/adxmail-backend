@@ -113,18 +113,7 @@ app.use('/redirect', redirect)
 
 app.use(express_status())
 
-if(process.env.TYPE_SSL == 'server'){
-	const httpsServer = https.createServer({
-		key: fs.readFileSync('/etc/letsencrypt/live/adxstore.com.br/privkey.pem'),
-		cert: fs.readFileSync('/etc/letsencrypt/live/adxstore.com.br/fullchain.pem'),
-	}, app)
-	
-	httpsServer.listen(process.env.PORT_SSL, () => {	
-		console.log(`Rodando remotamente na porta: ${process.env.PORT_SSL}`);
-	})	
-
-}else{
-	app.listen(3000, () => {
-		console.log('Rodando em http://localhost:3000')
-	})
-}
+let type_server = process.env.TYPE_SERVER
+app.listen(type_server == 'local' ? 3000 : process.env.PORT, () => {
+	console.log(`Rodando em http://localhost:${type_server == 'local' ? 3000 : process.env.PORT}`)
+})
