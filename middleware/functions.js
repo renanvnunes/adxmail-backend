@@ -15,7 +15,7 @@ export default {
 	},
 	set: global.moneyBr = (value) => {
 
-		// Remove todos os pontos e vírgulas
+		// Remove todos os pontos e vírgulas 
 		value = value.replace('BRL', '')
 		value = value.replace('R$', '')
 		value = value.replace('.', '')
