@@ -13,14 +13,27 @@ export default {
 		return str1.replace(',', '.')
 		
 	},
-	set: global.moneyBr = (str) => {
+	set: global.moneyBr = (value) => {
 
-		let replace1 = str.replace('BRL', '')
-		let replace2 = replace1.replace('R$', '')
-		let replace3 = replace2.replace(',', '.')
+		// Remove todos os pontos e vírgulas
+		value = value.replace('BRL', '')
+		value = value.replace('R$', '')
+		value = value.replace('.', '')
+		value = value.replace(',', '')
+		value = value.replace(' ', '')
 		
+		// Pega os últimos dois caracteres (centavos)
+		let centavos = value.slice(-2)
 
-		let value = parseFloat(replace3.trim())
-		return value.toLocaleString('pt-br', {minimumFractionDigits: 2})
+		// Remove os últimos dois caracteres
+		let sem_centavos = value.substr(0, value.length - 2);
+
+		// Junta tudo
+		value = Number(`${sem_centavos}.${centavos}`)
+		
+		// Formata para real
+		value = value.toLocaleString('pt-br', {minimumFractionDigits: 2});
+		
+		return value
 	}
 }
