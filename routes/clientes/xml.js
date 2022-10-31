@@ -6,7 +6,6 @@ import mongoose from 'mongoose'
 import xml2js from 'xml2js'
 import fs from 'fs'
 import path from 'path'
-import * as Sentry from '@sentry/node'
 
 const __dirname = path.resolve(path.dirname(''))
 const router = express.Router()
@@ -20,11 +19,6 @@ import verifySuper from '../../middleware/valid_super.js'
 
 import '../../models/empresas.js'
 const empresasSchema = mongoose.model(`${process.env.MDB_PREFIX}empresas`)
-
-Sentry.init({
-	dsn: process.env.SENTRY_URL,
-	tracesSampleRate: 1.0,
-})
 
 import ProdutosXML from './produtos.js'
 
@@ -194,7 +188,6 @@ router.get('/process_queue', async (req, res, next) => {
 			// Obtem a empresa
 			empresasSchema.findOne({status: 1}, {_id: 1}).skip(random).exec( async (err, empresa) => {
 				
-				// Caso não encontre nenhuma empresa, retorna erro e registra no sentry
 				if(err){
 					
 					redis_client.set('logs_xml_process:error:empresa_notfound', 'Erro ao obter os dados da empresa', 3600)

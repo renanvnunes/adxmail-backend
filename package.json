@@ -20,8 +20,6 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.99.0",
     "@now/node": "^1.8.5",
-    "@sentry/node": "^7.4.1",
-    "@sentry/tracing": "^7.4.1",
     "@vercel/node": "^2.4.0",
     "axios": "^0.26.1",
     "bcrypt": "^5.0.1",
