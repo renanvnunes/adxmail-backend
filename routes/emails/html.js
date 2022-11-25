@@ -63,6 +63,7 @@ router.get('/public/:id', async (req, res, next) => {
 		instagram: email.instagram,
 		youtube: email.youtube,
 		tiktok: email.tiktok,
+		obs: email.obs,
 
 		imagem_topo_adicional   : email.topo_adicional,
 		imagem_rodape_adicional : email.rodape_adicional,
