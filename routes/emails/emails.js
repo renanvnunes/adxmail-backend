@@ -35,18 +35,16 @@ router.get('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 	verifyPermissions(req, res, next, 'emails')
 
-}, cache.set('memory', 3600, 'emails'), async (req, res) => {
+}, cache.set('memory', 60, 'emails'), async (req, res) => {
 
 	const empresa_id = req.query.empresa_id
 
 	let query = {
 		empresa_id: mongoose.Types.ObjectId(empresa_id)
 	}
-
-	await emailsSchema.find(query).sort({created_at: -1}).then(async resp => {
-
+	
+	await emailsSchema.find(query).sort({created_at: -1}).skip(0).limit(50).then(async resp => {
 		let found_documents = resp.length > 0 ? resp.length : 0
-
 		res.send(outputMsg(true, resp, found_documents, null))
 	})
 })
@@ -306,7 +304,10 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		rodape_adicional_link: link_rodape_adicional,
 
 		created_by: user.user_nome,
-		updated_by: user.user_nome
+		updated_by: user.user_nome,
+
+		updated_at: moment().format('YYYY-MM-DD HH:mm:ss'),
+		created_at: moment().format('YYYY-MM-DD HH:mm:ss'),
 
 	})
 

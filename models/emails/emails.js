@@ -2,8 +2,6 @@ import moment from 'moment'
 import mongoose from 'mongoose'
 
 const Schema = mongoose.Schema
-const default_date = moment().format('YYYY-MM-DD HH:mm:ss')
-// const default_date = moment().toISOString("YYYY-MM-DD HH:mm:ss")
 
 const emailsSchema = new Schema({
 	migrado: {
@@ -40,14 +38,8 @@ const emailsSchema = new Schema({
 
 	produtos: Array,
 	
-	updated_at: {
-		type: Date,
-		default: default_date
-	},
-	created_at: {
-		type: Date,
-		default: default_date
-	},
+	updated_at: Date,
+	created_at: Date,
 	created_by: String,
 	updated_by: String,
 })
