@@ -37,15 +37,18 @@ router.get('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 }, cache.set('memory', 60, 'emails'), async (req, res) => {
 
+	const offset = Number(req.query.offset)
+	const limit = Number(req.query.limit)
 	const empresa_id = req.query.empresa_id
 
 	let query = {
 		empresa_id: mongoose.Types.ObjectId(empresa_id)
 	}
-	
-	await emailsSchema.find(query).sort({created_at: -1}).skip(0).limit(50).then(async resp => {
+
+	const total_documents = await emailsSchema.count(query)
+	await emailsSchema.find(query).sort({created_at: -1}).skip(offset ? offset : 0).limit(limit ? limit : 20).then(async resp => {
 		let found_documents = resp.length > 0 ? resp.length : 0
-		res.send(outputMsg(true, resp, found_documents, null))
+		res.send(outputMsg(true, resp, found_documents, total_documents))
 	})
 })
 
