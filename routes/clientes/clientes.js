@@ -25,7 +25,7 @@ router.get('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 		empresa_id: mongoose.Types.ObjectId(empresa_id)
 	}
 
-	await clientesSchema.find(query).sort({nome: -1}).then(async resp => {
+	await clientesSchema.find(query).sort({nome: 1}).then(async resp => {
 			
 		let found_documents = resp.length > 0 ? resp.length : 0	
 				
