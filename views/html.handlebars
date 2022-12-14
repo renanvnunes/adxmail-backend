@@ -70,11 +70,13 @@
 												<div style="text-align: center; margin-top: 20px; height: 70px; font-family: 'Arial'; padding-left: 10px; padding-right: 10px;">{{ this.nome }}</div>
 
 												{{#if this.preco_desconto}}
+												{{#if ../email.price_de_show}}
 												<div
 													style="text-align: center; margin-top: 10px; font-family: 'Arial';">
 
 													<b style="color: red;"><s>De R$ {{ this.preco }}</s></b>
 												</div>
+												{{/if}}
 												{{/if}}
 
 												{{#if this.preco_desconto}}

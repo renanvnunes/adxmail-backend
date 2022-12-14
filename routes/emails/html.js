@@ -71,6 +71,9 @@ router.get('/public/:id', async (req, res, next) => {
 		link_rodape_adicional   : email.rodape_adicional_link,
 
 		produtos: email.produtos,
+
+		// Gambiarra para esconder o preço DE apenas no cliente Medicinal Web
+		price_de_show: email.cliente_id == '62cc411593807f105ed62b34' ? false : true
 	}
 
 	let render = {
