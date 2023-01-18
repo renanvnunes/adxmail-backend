@@ -159,7 +159,6 @@ router.delete('/:id', verifyJWT, verifyEmpresa, (req, res, next) => {
 	}
 	res.send(outputMsg(true, 'Removido com sucesso'))
 
-	// Código que varre todos os contatos e remove esta tag (recém deletada) deles, caso possuam ela 
 	const empresa_id = req.query.empresa_id
 	await contactsSchema.find({ empresa_id: mongoose.Types.ObjectId(empresa_id) }).then(async resp => {
 		if (resp.length > 0) {
