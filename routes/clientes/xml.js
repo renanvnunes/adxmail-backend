@@ -372,8 +372,7 @@ router.post('/queue', verifyJWT, verifyEmpresa, (req, res, next) => {
 	verifyPermissions(req, res, next, 'clientes')
 
 }, async (req, res) => {
-
-	return 'ok'
+	
 	const xml_url = req.body.xml
 	const cliente_id = req.body.id
 	const cliente_nome = req.body.nome
