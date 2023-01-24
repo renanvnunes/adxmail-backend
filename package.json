@@ -9,7 +9,7 @@
     "dev": "nodemon ./server.js",
     "queue": "nodemon ./crons/queues_xml.js",
     "queue_process": "nodemon ./crons/process_xml.js",
-    "start": "node server.js & node ./crons/queues_xml.js & node ./crons/process_xml.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": "16.x"
