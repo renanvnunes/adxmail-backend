@@ -118,9 +118,11 @@ router.post('/', verifyJWT, verifyEmpresa, (req, res, next) => {
 
 					fs.readFile(image_dir + image_topo_name, async (error, file) => {
 
+						const image_format = key_foto_topo.split('.')
+
 						const bucketParams = {
 							Bucket: process.env.DO_SP_NAME,
-							ContentType: `image/jpg`,
+							ContentType: `image/${image_format[image_format.length - 1]}`,
 							Key: key_foto_topo,
 							ACL: 'public-read',
 							Body: file,
