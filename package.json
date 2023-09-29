@@ -12,7 +12,7 @@
     "start": "node server.js & node ./crons/queues_xml.js & node ./crons/process_xml.js"
   },
   "engines": {
-    "node": "16.x"
+    "node": "18.x"
   },
   "keywords": [],
   "author": "Renan Nunes",
