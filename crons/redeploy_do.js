@@ -2,6 +2,7 @@ import 'dotenv/config';
 import axios from 'axios';
 import cron from 'node-cron';
 
+// Cron executada todo dia as 6 da manhã
 cron.schedule('0 6 * * *', async () => {
 	const apiKey = process.env.DIGITALOCEAN_API_KEY;
 	const app_id = process.env.DIGITALOCEAN_APP_ID;
@@ -9,7 +10,7 @@ cron.schedule('0 6 * * *', async () => {
 		const response = await axios.post(
 			`https://api.digitalocean.com/v2/apps/${app_id}/deployments`,
 			{
-				type: 'rebuild',
+				"force_build": true,
 			},
 			{
 				headers: {
